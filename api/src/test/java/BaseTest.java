@@ -40,7 +40,6 @@ public class BaseTest {
      */
     protected ResponseWrapper responseWrapper;
 
-
     /**
      * Метод для получения спецификации RestAssured
      * <p>
@@ -58,10 +57,6 @@ public class BaseTest {
                 .setBaseUri(config.url())
                 .setContentType(ContentType.ANY)
                 .setAccept(ContentType.ANY)
-//                .setContentType("application json;charset = UTF-8")
-//                .setAccept("application json;charset = UTF-8")
-
-
                 .addFilter(new AllureRestAssured())
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))

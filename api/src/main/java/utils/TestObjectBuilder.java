@@ -1,122 +1,49 @@
 package utils;
 
+import config.BaseConfig;
 import dto.AddNewBookRequest;
+import dto.AuthRequest;
+import org.aeonbits.owner.ConfigFactory;
 
 import static utils.RandomGenerator.*;
 
+/**
+ * Вспомагательный класс для формирования тестовых объектов
+ * Сваггер http://restful-booker.herokuapp.com/apidoc/index.html#api-Booking-CreateBooking
+ */
 public class TestObjectBuilder {
+    private static final BaseConfig config = ConfigFactory.create(BaseConfig.class, System.getenv());
+
     /**
-     * успешный запрос
+     * успешный запрос на создание записи
+     *
      * @return
      */
     public static AddNewBookRequest getAddBookRequestSuccess() {
         return AddNewBookRequest.builder()
                 .firstname(getRandomFirstname())
                 .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
+                .totalprice(randomTotalPrice())
+                .depositpaid(getDepositPaid())
+                .additionalneeds(getRandomAdditionalNeeds())
                 .bookingdates(AddNewBookRequest.Bookingdates.builder()
                         .checkin(getRandomDataIN())
                         .checkout(getRandomDataOUT())
                         .build())
                 .build();
     }
+
     /**
-     *  запрос с firstname(null)
-     * @return
-     */
-    public static AddNewBookRequest getAddBookRequestNullFirstname() {
-        return AddNewBookRequest.builder()
-                .firstname(null)
-                .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(getRandomDataOUT())
-                        .build())
-                .build();
-    }
-    /**
-     *  запрос с firstname int
-     * @return
-     */
-    public static AddNewBookRequest getAddBookRequestErrorFirstname() {
-        return AddNewBookRequest.builder()
-                 .firstname(InputNum())
-                .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(getRandomDataOUT())
-                        .build())
-                .build();
-    }
-    /**
-     *  запрос с .lastname(null)
-     * @return
-     */
-    public static AddNewBookRequest getAddBookRequestNullLastname() {
-        return AddNewBookRequest.builder()
-                .firstname(getRandomFirstname())
-                .lastname(null)
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(getRandomDataOUT())
-                        .build())
-                .build();
-    }
-    /**
-     *  запрос с totalprice(null)
-     * @return
-     */
-    public static AddNewBookRequest getAddBookRequestNullTotalprice() {
-        return AddNewBookRequest.builder()
-                .firstname(getRandomFirstname())
-                .lastname(getRandomLastname())
-                .totalprice(null)
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(getRandomDataOUT())
-                        .build())
-                .build();
-    }
-    /**
-     *  запрос с depositpaid(null)
-     * @return
-     */
-    public static AddNewBookRequest getAddBookRequestNullDepositpaid() {
-        return AddNewBookRequest.builder()
-                .firstname(getRandomFirstname())
-                .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(null)
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(getRandomDataOUT())
-                        .build())
-                .build();
-    }
-    /**
-     *  запрос с additionalneeds(null)
+     * запрос на создание записи с additionalneeds(null)
+     *
      * @return
      */
     public static AddNewBookRequest getAddBookRequestNullAdditionalneeds() {
         return AddNewBookRequest.builder()
                 .firstname(getRandomFirstname())
                 .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
+                .totalprice(randomTotalPrice())
+                .depositpaid(getDepositPaid())
                 .additionalneeds(null)
                 .bookingdates(AddNewBookRequest.Bookingdates.builder()
                         .checkin(getRandomDataIN())
@@ -124,55 +51,24 @@ public class TestObjectBuilder {
                         .build())
                 .build();
     }
+
     /**
-     *  запрос с checkin(null)
-     * @return
+     * успешная Авторизация
      */
-    public static AddNewBookRequest getAddBookRequestNullCheckin() {
-        return AddNewBookRequest.builder()
-                .firstname(getRandomFirstname())
-                .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(null)
-                        .checkout(getRandomDataOUT())
-                        .build())
+    public static AuthRequest getSuccessAuth() {
+        return AuthRequest.builder()
+                .username(config.username())
+                .password(config.password())
                 .build();
     }
+
     /**
-     *  запрос с checkout(null)
-     * @return
+     * невалидный логин для Авторизации
      */
-    public static AddNewBookRequest getAddBookRequestNullCheckout() {
-        return AddNewBookRequest.builder()
-                .firstname(getRandomFirstname())
-                .lastname(getRandomLastname())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(null)
-                        .build())
-                .build();
-    }
-    /**
-     *  запрос с lastname int
-     * @return
-     */
-    public static AddNewBookRequest getAddBookRequestErrorLastname() {
-        return AddNewBookRequest.builder()
-                .firstname(getRandomFirstname())
-                .lastname(InputNum())
-                .totalprice(RandomTotalPrice())
-                .depositpaid(getDepositpaid())
-                .additionalneeds(getRandomAdditionalneeds())
-                .bookingdates(AddNewBookRequest.Bookingdates.builder()
-                        .checkin(getRandomDataIN())
-                        .checkout(getRandomDataOUT())
-                        .build())
+    public static AuthRequest getErrorAllDataAuth() {
+        return AuthRequest.builder()
+                .username(ERROR_USERNAME)
+                .password(ERROR_PASSWORD)
                 .build();
     }
 }

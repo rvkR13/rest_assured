@@ -1,22 +1,32 @@
 package dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+import static utils.RandomGenerator.*;
+
+@Value
 @Builder
 public class AddNewBookRequest {
-    private final Object firstname;
-    private final Object lastname;
-    private final Integer totalprice;
-    private final Object depositpaid;// Boolean  или boolean?
-    private final Object additionalneeds;
-    private final  Bookingdates bookingdates;
+    @Builder.Default
+    Object firstname = getRandomFirstname();
+    @Builder.Default
+    Object lastname = getRandomLastname();
+    @Builder.Default
+    Integer totalprice = randomTotalPrice();
+    @Builder.Default
+    Object depositpaid = getDepositPaid();
+    @Builder.Default
+    Object additionalneeds = getRandomAdditionalNeeds();
+    @Builder.Default
+    Bookingdates bookingdates = Bookingdates.builder().build();
 
-    @Data
+    @Value
     @Builder
     public static class Bookingdates {
-        private final Object checkin;
-        private final Object checkout;
+        @Builder.Default
+        Object checkin = getRandomDataIN();
+        @Builder.Default
+        Object checkout = getRandomDataOUT();
     }
 }

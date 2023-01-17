@@ -32,6 +32,8 @@ dependencies {
     //AssertJ аннотации
     testImplementation 'org.assertj:assertj-core:3.22.0'
 
+
+
     //Lombok аннотации
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     compileOnly 'org.projectlombok:lombok:1.18.24'
@@ -53,6 +55,7 @@ dependencies {
 
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
+
 }
 
 test {

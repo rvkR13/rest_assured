@@ -2,16 +2,24 @@ import dto.AddNewBookRequest;
 import dto.AddNewBookResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
 import utils.ResponseWrapper;
 
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static utils.RandomGenerator.STATUS_CODE_ERROR_500;
-import static utils.RandomGenerator.STATUS_CODE_OK;
+
 import static utils.TestObjectBuilder.*;
 
-public class AddNewBook extends BaseTest {
-    @DisplayName("Successful response with optional all field ")
+public class AddNewBookTests extends BaseTest {
+    /**
+     * Тесты на добавление нового объекта book
+     * ручка  http://restful-booker.herokuapp.com/apidoc/index.html#api-Booking-CreateBooking
+     */
+
     @Test
+    @DisplayName("Successful response with mandatory all fields")
     public void testAddBook() {
         AddNewBookRequest request = getAddBookRequestSuccess();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
@@ -21,7 +29,7 @@ public class AddNewBook extends BaseTest {
                     softAssertions
                             .assertThat(responseWrapper.getStatusCode())
                             .withFailMessage("статус код не совпадает")
-                            .isEqualTo(STATUS_CODE_OK);
+                            .isEqualTo(SC_OK);
                     softAssertions
                             .assertThat(response.getBooking().getFirstname())
                             .withFailMessage("Firstname не совпадает")
@@ -50,68 +58,17 @@ public class AddNewBook extends BaseTest {
                             .assertThat(response.getBooking().getDepositpaid())
                             .withFailMessage("depositpaid не совпадает")
                             .isEqualTo(request.getDepositpaid());
-                }
-        );
-    }
-    @DisplayName("Server Error response without optional field Firstname")
-    @Test
-    public void testAddBookNullFirstname() {
-        AddNewBookRequest request = getAddBookRequestNullFirstname();
-        ResponseWrapper responseWrapper = steps.createNewBook(request);
-        assertSoftly(
-                softAssertions -> {
                     softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
+                            .assertThat(response.getBooking().getFirstname())
+                            .withFailMessage("Firstname не совпадает")
+                            .isEqualTo(request.getFirstname());
                 }
         );
     }
-    @DisplayName("Server Error response without optional field Totalprice")
-    @Test
-    public void testAddBookNullTotalprice() {
-        AddNewBookRequest request = getAddBookRequestNullTotalprice();
-        ResponseWrapper responseWrapper = steps.createNewBook(request);
-        assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
-        );
-    }
-    @DisplayName("Server Error response without optional field Lastname")
-    @Test
-    public void testAddBookNullLastname() {
-        AddNewBookRequest request = getAddBookRequestNullLastname();
-        ResponseWrapper responseWrapper = steps.createNewBook(request);
-        assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
-        );
-    }
-    @DisplayName("Server Error response without optional field Depositpaid")
-    @Test
-    public void testAddBookNullDepositpaid() {
-        AddNewBookRequest request = getAddBookRequestNullDepositpaid();
-        ResponseWrapper responseWrapper = steps.createNewBook(request);
-        assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
-        );
-    }
-    @DisplayName("Successful response without optional field Additionalneeds")
+
     @Test()
-    public void testAddBookNullAdditionalneeds() {
+    @DisplayName("Successful response without optional field Additionalneeds")
+    public void testAddBookNullAdditionalNeeds() {
         AddNewBookRequest request = getAddBookRequestNullAdditionalneeds();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
         AddNewBookResponse response = responseWrapper.as(AddNewBookResponse.class);
@@ -120,7 +77,7 @@ public class AddNewBook extends BaseTest {
                     softAssertions
                             .assertThat(responseWrapper.getStatusCode())
                             .withFailMessage("статус код не совпадает")
-                            .isEqualTo(STATUS_CODE_OK);
+                            .isEqualTo(SC_OK);
                     softAssertions
                             .assertThat(response.getBooking().getFirstname())
                             .withFailMessage("Firstname не совпадает")
@@ -152,60 +109,92 @@ public class AddNewBook extends BaseTest {
                 }
         );
     }
-    @DisplayName("Server Error response without optional field Checkin")
-    @Test
-    public void testAddBookNullCheckin() {
-        AddNewBookRequest request = getAddBookRequestNullCheckin();
+
+    @ParameterizedTest(name = "{displayName}: {0}")
+    @DisplayName("Server Error response  without field FirstName or number value")
+    @MethodSource("utils.RandomGenerator#provideStringsForIsBlank")
+    public void testAddBookFirstNameNullOrInteger(Object value) {
+        AddNewBookRequest request = AddNewBookRequest.builder().firstname(value)
+                .build();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
         assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
+                softAssertions -> softAssertions
+                        .assertThat(responseWrapper.getStatusCode())
+                        .withFailMessage("test fail")
+                        .isEqualTo(SC_INTERNAL_SERVER_ERROR)
         );
     }
-    @DisplayName("Server Error response without optional field Checkout")
-    @Test
-    public void testAddBookNullCheckout() {
-        AddNewBookRequest request = getAddBookRequestNullCheckout();
+
+    @ParameterizedTest(name = "{displayName}: {0}")
+    @DisplayName("Server Error response  without field LastName or number value")
+    @MethodSource("utils.RandomGenerator#provideStringsForIsBlank")
+    public void testAddBookLastNameNullOrInteger(Object value) {
+        AddNewBookRequest request = AddNewBookRequest.builder().lastname(value)
+                .build();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
         assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
+                softAssertions -> softAssertions
+                        .assertThat(responseWrapper.getStatusCode())
+                        .withFailMessage("test fail")
+                        .isEqualTo(SC_INTERNAL_SERVER_ERROR)
         );
     }
-    @DisplayName("Server Error response with ErrorFirstname")
-    @Test
-    public void testAddBookErrorFirstname() {
-        AddNewBookRequest request = getAddBookRequestErrorFirstname();
+
+    @ParameterizedTest(name = "{displayName}: {0}")
+    @DisplayName("Server Error response  without field TotalPrice ")
+    @NullSource
+    public void testAddBookTotalPriceNull(Object value) {
+        AddNewBookRequest request = AddNewBookRequest.builder().totalprice((Integer) value)
+                .build();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
         assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
+                softAssertions -> softAssertions
+                        .assertThat(responseWrapper.getStatusCode())
+                        .withFailMessage("test fail")
+                        .isEqualTo(SC_INTERNAL_SERVER_ERROR)
         );
     }
-    @DisplayName("Server Error response with ErrorLastname")
-    @Test
-    public void testAddBookErrorCheckin() {
-        AddNewBookRequest request = getAddBookRequestErrorLastname();
+
+    @ParameterizedTest(name = "{displayName}: {0}")
+    @DisplayName("Server Error response  without field DepositPaid")
+    @NullSource
+    public void testAddBookDepositPaidNull(Object value) {
+        AddNewBookRequest request = AddNewBookRequest.builder().depositpaid(value)
+                .build();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
         assertSoftly(
-                softAssertions -> {
-                    softAssertions
-                            .assertThat(responseWrapper.getStatusCode())
-                            .withFailMessage("test fail")
-                            .isEqualTo(STATUS_CODE_ERROR_500);
-                }
+                softAssertions -> softAssertions
+                        .assertThat(responseWrapper.getStatusCode())
+                        .withFailMessage("test fail")
+                        .isEqualTo(SC_INTERNAL_SERVER_ERROR)
+        );
+    }
+
+    @ParameterizedTest(name = "{displayName}: {0}")
+    @DisplayName("Server Error response  without field CheckIn")
+    @NullSource
+    public void testAddBookCheckInNull(Object value) {
+        AddNewBookRequest request = AddNewBookRequest.builder().bookingdates(AddNewBookRequest.Bookingdates.builder().checkin(value).build()).build();
+        ResponseWrapper responseWrapper = steps.createNewBook(request);
+        assertSoftly(
+                softAssertions -> softAssertions
+                        .assertThat(responseWrapper.getStatusCode())
+                        .withFailMessage("test fail")
+                        .isEqualTo(SC_INTERNAL_SERVER_ERROR)
+        );
+    }
+
+    @ParameterizedTest(name = "{displayName}: {0}")
+    @DisplayName("Server Error response  without field CheckOut")
+    @NullSource
+    public void testAddBookCheckOutNull(Object value) {
+        AddNewBookRequest request = AddNewBookRequest.builder().bookingdates(AddNewBookRequest.Bookingdates.builder().checkout(value).build()).build();
+        ResponseWrapper responseWrapper = steps.createNewBook(request);
+        assertSoftly(
+                softAssertions -> softAssertions
+                        .assertThat(responseWrapper.getStatusCode())
+                        .withFailMessage("test fail")
+                        .isEqualTo(SC_INTERNAL_SERVER_ERROR)
         );
     }
 }

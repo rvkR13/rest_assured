@@ -30,8 +30,8 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-junit5:2.17.3'
 
     //AssertJ аннотации
-    testImplementation 'org.assertj:assertj-core:3.22.0'
-
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+    implementation 'org.assertj:assertj-core:3.23.1'
 
 
     //Lombok аннотации
@@ -60,6 +60,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    maxParallelForks = 4
 }
 
 apply plugin: "io.qameta.allure"

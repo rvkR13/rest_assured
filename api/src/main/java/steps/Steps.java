@@ -1,18 +1,21 @@
 package steps;
 
+import apiEndPoints.BookApi;
 import dto.AddNewBookRequest;
 import dto.AuthRequest;
+import io.qameta.allure.Step;
 import io.restassured.specification.RequestSpecification;
 import utils.ResponseWrapper;
+import utils.spec.GET;
 
 import static io.restassured.RestAssured.given;
-// TODO: 16.01.2023 todo добавить описание class Steps /**
+import static utils.Helper.validateAnnotation;
 
 /**
  * Класс с реализацией всех шагов
  */
 
-public class Steps {
+public class Steps implements BookApi{
 
     /**
      * Часть URL для запросов /booking
@@ -38,6 +41,10 @@ public class Steps {
         this.requestSpecification = requestSpecification;
     }
 
+    /**
+     * создание интерфейса bookApi
+     */
+    private final Class<BookApi> api = BookApi.class;
     /**
      *  Создание новой книги
      * @param request тело запроса
@@ -82,7 +89,12 @@ public class Steps {
                 .get(FIND_BOOK)
                 .andReturn());
     }
-
+    public ResponseWrapper getPet(Long petId) {
+        return new ResponseWrapper(given(requestSpecification)
+                .when()
+                .get(validateAnnotation("getPet", api, GET.class, Long.class).endpoint(), petId)
+                .thenReturn());
+    }
     /**
      * delete book
      *
@@ -96,6 +108,14 @@ public class Steps {
                 .pathParam("bookId", bookId)
                 .header("Cookie", "token=" + token)
                 .delete(FIND_BOOK)
+                .andReturn());
+    }
+    @Step("find book")
+    public ResponseWrapper getBook(String bookId){
+        return new ResponseWrapper(given(requestSpecification)
+                .when()
+                //.pathParam("bookId", bookId)
+                .get(validateAnnotation("getBook",api,GET.class,String.class).endpoint(),bookId)
                 .andReturn());
     }
 }

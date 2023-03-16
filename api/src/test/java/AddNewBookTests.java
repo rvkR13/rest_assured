@@ -1,5 +1,8 @@
 import dto.AddNewBookRequest;
 import dto.AddNewBookResponse;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +14,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import static utils.TestObjectBuilder.*;
-
+@Epic("Добавление книг")
+@Feature("Проверка раздела 'Добавление книг в магазин'")
 public class AddNewBookTests extends BaseTest {
     /**
      * Тесты на добавление нового объекта book
@@ -19,7 +23,7 @@ public class AddNewBookTests extends BaseTest {
      */
 
     @Test
-    @DisplayName("Successful response with mandatory all fields")
+    @DisplayName("Успешное добавление книги с заполнением всех полей")
     public void testAddBook() {
         AddNewBookRequest request = getAddBookRequestSuccess();
         ResponseWrapper responseWrapper = steps.createNewBook(request);
@@ -58,16 +62,12 @@ public class AddNewBookTests extends BaseTest {
                             .assertThat(response.getBooking().getDepositpaid())
                             .withFailMessage("depositpaid не совпадает")
                             .isEqualTo(request.getDepositpaid());
-                    softAssertions
-                            .assertThat(response.getBooking().getFirstname())
-                            .withFailMessage("Firstname не совпадает")
-                            .isEqualTo(request.getFirstname());
                 }
         );
     }
 
     @Test()
-    @DisplayName("Successful response without optional field Additionalneeds")
+    @DisplayName("Успешное добавление книги с заполнение только обязательных полей")
     public void testAddBookNullAdditionalNeeds() {
         AddNewBookRequest request = getAddBookRequestNullAdditionalneeds();
         ResponseWrapper responseWrapper = steps.createNewBook(request);

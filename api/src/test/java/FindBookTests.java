@@ -1,6 +1,7 @@
 import dto.AddNewBookRequest;
 import dto.AddNewBookResponse;
 import dto.BookingFind;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,12 @@ public class FindBookTests extends BaseTest {
         ResponseWrapper responseWrapper = steps.createNewBook(request);
         bookId = responseWrapper.as(AddNewBookResponse.class).getBookingid();
     }
+//    @Test
+//    public void findBookTest(){
+//        ResponseWrapper responseWrapper = steps.getBook(String.valueOf(bookId))
+//                .showBody()
+//                .getStatusCode(SC_OK);
+//    }
 
     @Test
     @DisplayName("Successful find book")

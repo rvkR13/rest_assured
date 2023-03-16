@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+
 /**
  * Вспомогательный класс, оболочка для работы с ответами
  */
@@ -45,5 +48,10 @@ public class ResponseWrapper {
      */
     public int getStatusCode() {
         return response.getStatusCode();
+    }
+
+    public ResponseWrapper showBody(){
+        response.print();
+        return this;
     }
 }

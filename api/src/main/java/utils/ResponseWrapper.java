@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 
 /**
  * Вспомогательный класс, оболочка для работы с ответами

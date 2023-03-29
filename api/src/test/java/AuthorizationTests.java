@@ -2,6 +2,7 @@ import dto.AddNewBookRequest;
 import dto.AuthError;
 import dto.AuthRequest;
 import dto.AuthResponse;
+import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,6 +41,7 @@ public class AuthorizationTests extends BaseTest {
         );
     }
 
+    @Owner("rvk13")
     @ParameterizedTest(name = "{displayName}: {0}")
     @DisplayName("Auth with Error And Null Name")
     @MethodSource("utils.RandomGenerator#provideStringsForIsBlank")

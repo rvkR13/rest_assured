@@ -9,12 +9,15 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.aeonbits.owner.ConfigFactory;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.Steps;
 import utils.ResponseWrapper;
 
 /**
  * Базовый тестовый класс с общими настройками
  */
+@Execution(ExecutionMode.CONCURRENT)
 public class BaseTest {
     /**
      * Экземпляр интерфейса с конфигурацией
